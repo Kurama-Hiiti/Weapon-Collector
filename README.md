@@ -1,4 +1,4 @@
-# 3作目　Escape:1Room
+# 4作目　WeaponCollector
 
 <figure>
    <figcaption>ゲームシーン</figcaption>
