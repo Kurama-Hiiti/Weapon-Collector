@@ -198,7 +198,7 @@ public class ItemManager : MonoBehaviour
     private void AmuletAttackDownEffect()
     {
         //敵に攻撃力50％ダウン
-        EnemyManger.instance.EnemyDebuff(0.5f, 0, 0);
+        EnemyManager.instance.EnemyDebuff(0.5f, 0, 0);
 
         //デバフ管理
         GameManager.instance.attackDownAmulet = true;
@@ -215,7 +215,7 @@ public class ItemManager : MonoBehaviour
     private void AmuletDefenseDownEffect()
     {
         //敵に防御力50％ダウン
-        EnemyManger.instance.EnemyDebuff(0, 0.5f, 0);
+        EnemyManager.instance.EnemyDebuff(0, 0.5f, 0);
 
         //デバフ管理
         GameManager.instance.defenseDownAmulet = true;

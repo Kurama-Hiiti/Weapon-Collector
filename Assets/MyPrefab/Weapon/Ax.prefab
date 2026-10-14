@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 956752177
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: -136201570, guid: aa40e959ca402af46b4498f9b7ddff2e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5081489108904109814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5be74462fd8cf6e49902a706676b79b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 74925baea193f5a409507724834901c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   attack: 0
@@ -157,6 +157,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4546082242668907351}
     m_Modifications:
+    - target: {fileID: 1796678928127615585, guid: 6d45d42cb1152c84b913507fda1338aa, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3725816378635686951, guid: 6d45d42cb1152c84b913507fda1338aa, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -236,6 +240,10 @@ PrefabInstance:
     - target: {fileID: 3725816378635686951, guid: 6d45d42cb1152c84b913507fda1338aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3994442315238568102, guid: 6d45d42cb1152c84b913507fda1338aa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8763077436752521566, guid: 6d45d42cb1152c84b913507fda1338aa, type: 3}
       propertyPath: m_Name

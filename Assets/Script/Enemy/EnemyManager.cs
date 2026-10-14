@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using static SoundManager;
 
-public class EnemyManger : MonoBehaviour
+public class EnemyManager : MonoBehaviour
 {
 
-    public static EnemyManger instance;
+    public static EnemyManager instance;
 
     //エネミーのスプライトパターン
     [SerializeField]

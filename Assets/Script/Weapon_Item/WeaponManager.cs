@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static SoundManager;
 
-public class WeaponManger : MonoBehaviour
+public class WeaponManager : MonoBehaviour
 {
     //武器のステータス
     public float attack, health;
@@ -296,7 +296,7 @@ public class WeaponManger : MonoBehaviour
         Player.instance.PlayerAttackAnimation();
 
         //デバフ
-        EnemyManger.instance.EnemyDebuff(0.1f, 0.1f, 0);
+        EnemyManager.instance.EnemyDebuff(0.1f, 0.1f, 0);
 
 
         //剣によるデバフ判定
@@ -312,7 +312,7 @@ public class WeaponManger : MonoBehaviour
         Player.instance.StatusBuff(0.2f, 0, 0);
 
         //敵に防御力30％ダウン
-        EnemyManger.instance.EnemyDebuff(0, 0.3f, 0);
+        EnemyManager.instance.EnemyDebuff(0, 0.3f, 0);
 
 
         //斧によるバフ判定
@@ -364,7 +364,7 @@ public class WeaponManger : MonoBehaviour
         Player.instance.StatusBuff(1, 0, 0);
 
         //敵に攻撃力30％ダウン
-        EnemyManger.instance.EnemyDebuff(0.3f, 0, 0);
+        EnemyManager.instance.EnemyDebuff(0.3f, 0, 0);
 
         //鎌によるバフ判定
         Player.instance.sickleBuff = true;
@@ -504,7 +504,7 @@ public class WeaponManger : MonoBehaviour
         //50%の確率でスタンにする
         if (stunRate <= 0.5f)
         {
-            EnemyManger.instance.isStun = true;
+            EnemyManager.instance.isStun = true;
 
             SoundManager.instance.PlaySE(SoundType.DeBuff);
         }
@@ -524,7 +524,7 @@ public class WeaponManger : MonoBehaviour
         //50%の確率でスタンにする
         if (stunRate <= 0.3f)
         {
-            EnemyManger.instance.isStun = true;
+            EnemyManager.instance.isStun = true;
 
             SoundManager.instance.PlaySE(SoundType.DeBuff);
         }
@@ -545,7 +545,7 @@ public class WeaponManger : MonoBehaviour
         //50%の確率でスタンにする
         if (stunRate <= 0.2f)
         {
-            EnemyManger.instance.isStun = true;
+            EnemyManager.instance.isStun = true;
 
             SoundManager.instance.PlaySE(SoundType.DeBuff);
         }
@@ -592,7 +592,7 @@ public class WeaponManger : MonoBehaviour
         Player.instance.PlayerAttackAnimation();
 
         //敵に攻撃力20％ダウン回避率30%ダウン
-        EnemyManger.instance.EnemyDebuff(0.2f, 0, 0.3f);
+        EnemyManager.instance.EnemyDebuff(0.2f, 0, 0.3f);
 
         GameManager.instance.whipDebuff = true;
 
@@ -602,7 +602,7 @@ public class WeaponManger : MonoBehaviour
     private void BowSkill()
     {
         //敵に攻撃力10％ダウン
-        EnemyManger.instance.EnemyDebuff(0.1f, 0, 0);
+        EnemyManager.instance.EnemyDebuff(0.1f, 0, 0);
 
         GameManager.instance.bowDebuff = true;
 
@@ -620,7 +620,7 @@ public class WeaponManger : MonoBehaviour
     private void BowGunSkill()
     {
         //敵に攻撃力15％ダウン
-        EnemyManger.instance.EnemyDebuff(0.15f, 0, 0);
+        EnemyManager.instance.EnemyDebuff(0.15f, 0, 0);
 
         GameManager.instance.bowGunDebuff = true;
 
@@ -644,7 +644,7 @@ public class WeaponManger : MonoBehaviour
         Player.instance.PlayerAttackAnimation();
 
         //敵に攻撃力10％ダウン
-        EnemyManger.instance.EnemyDebuff(0.1f, 0, 0);
+        EnemyManager.instance.EnemyDebuff(0.1f, 0, 0);
 
         GameManager.instance.gunDebuff = true;
 

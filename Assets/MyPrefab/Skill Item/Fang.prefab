@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 956752177
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: -866806748, guid: aa40e959ca402af46b4498f9b7ddff2e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -95,11 +95,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2256988686409161660}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5be74462fd8cf6e49902a706676b79b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 74925baea193f5a409507724834901c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   attack: 0
   health: 0
+  coolTime: 0
+  thisWeaponListNum: 0
+  coolTimeText: {fileID: 0}
 --- !u!61 &8655100542453143559
 BoxCollider2D:
   m_ObjectHideFlags: 0

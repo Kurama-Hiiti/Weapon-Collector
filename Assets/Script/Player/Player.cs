@@ -357,7 +357,7 @@ public class Player : MonoBehaviour
         //装備されている武器のステータスの値を足し合わせる
         for (int i = 0; i < Weapon.Count; i++)
         {
-             WeaponManger myWeapon = Weapon[i].GetComponent<WeaponManger>();
+             WeaponManager myWeapon = Weapon[i].GetComponent<WeaponManager>();
 
             weaponAttack += myWeapon.attack;
 
@@ -526,7 +526,7 @@ public class Player : MonoBehaviour
         playerAnimation.PlayAnimation(4);
 
         //攻撃エフェクト
-        Instantiate(attackEffect, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
+        Instantiate(attackEffect, EnemyManager.instance.enemyPos.transform.position, Quaternion.identity);
 
         if (!tonfaBuff)
         {
@@ -537,10 +537,10 @@ public class Player : MonoBehaviour
             GameManager.instance.enemyTurn = true;
 
             //エネミーのターン加算フラグ
-            EnemyManger.instance.turnAddEnemy = false;
+            EnemyManager.instance.turnAddEnemy = false;
 
             //エネミーの攻撃フラグ
-            EnemyManger.instance.enemyAttacked = false;
+            EnemyManager.instance.enemyAttacked = false;
 
             //連打回数リセット
             attackButtonPushCount = 0;
@@ -564,7 +564,7 @@ public class Player : MonoBehaviour
         playerAnimation.PlayAnimation(4);
 
         //攻撃エフェクト
-        Instantiate(attackEffect, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
+        Instantiate(attackEffect, EnemyManager.instance.enemyPos.transform.position, Quaternion.identity);
 
         //プレイヤーターン終了
         GameManager.instance.playerTurn = false;
@@ -573,10 +573,10 @@ public class Player : MonoBehaviour
         GameManager.instance.enemyTurn = true;
 
         //エネミーのターン加算フラグ
-        EnemyManger.instance.turnAddEnemy = false;
+        EnemyManager.instance.turnAddEnemy = false;
 
         //エネミーの攻撃フラグ
-        EnemyManger.instance.enemyAttacked = false;
+        EnemyManager.instance.enemyAttacked = false;
 
         //連打回数リセット
         attackButtonPushCount = 0;
@@ -794,7 +794,7 @@ public class Player : MonoBehaviour
         playerAnimation.PlayAnimation(4);
 
         //攻撃エフェクト生成
-        Instantiate(attackEffect, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
+        Instantiate(attackEffect, EnemyManager.instance.enemyPos.transform.position, Quaternion.identity);
     }
 
 
@@ -1214,15 +1214,15 @@ public class Player : MonoBehaviour
         SaberAndRapierBuffProcess();
 
         //敵のデバフリセット関数
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.swordDebuff);
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.axDebuff);
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.sickleDebuff);
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.whipDebuff);
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.bowDebuff);
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.bowGunDebuff);
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.gunDebuff);
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.attackDownAmulet);
-        EnemyManger.instance.DebuffReset(ref GameManager.instance.defenseDownAmulet);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.swordDebuff);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.axDebuff);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.sickleDebuff);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.whipDebuff);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.bowDebuff);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.bowGunDebuff);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.gunDebuff);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.attackDownAmulet);
+        EnemyManager.instance.DebuffReset(ref GameManager.instance.defenseDownAmulet);
 
         turnAddPlayer = true;
     }

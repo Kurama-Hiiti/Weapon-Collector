@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
     private GameObject viewCard;
 
     //クリックしたときにアイコンについているスクリプトを格納する　武器用
-    private WeaponManger weaponSkill;
+    private WeaponManager weaponSkill;
 
     //クリックしたときにアイコンについているスクリプトを格納　アイテム用
     private ItemManager itemEffect;
@@ -356,15 +356,15 @@ public class GameManager : MonoBehaviour
             }
 
             //勝利（エネミーを倒したとき）
-            if (EnemyManger.instance.currentEnemyHealth <= 0)
+            if (EnemyManager.instance.currentEnemyHealth <= 0)
             {
-                EnemyManger.instance.EnemyDelete();
+                EnemyManager.instance.EnemyDelete();
                 playerTurn = false;
                 enemyTurn = false;
                 battleEnd = true;
                 //プレイヤーターン加算フラグ
                 Player.instance.turnAddPlayer = false;
-                EnemyManger.instance.isStun = false;
+                EnemyManager.instance.isStun = false;
 
                 //ステータスボード非表示
                 HiddenStatusBoad();
@@ -472,7 +472,7 @@ public class GameManager : MonoBehaviour
         //ヒット確認
         float hitCheck = Random.Range(0.0f, 1.0f);
 
-        if (EnemyManger.instance.enemyEvasionRate < hitCheck)
+        if (EnemyManager.instance.enemyEvasionRate < hitCheck)
         {
             //クリティカル確認
             float criticalCheck = Random.Range(0.0f, 1.0f);
@@ -481,11 +481,11 @@ public class GameManager : MonoBehaviour
             {
                 //クリティカル(1.5倍)ダメ―ジ計算　→　敵のHPからプレイヤー攻撃力分減らす（敵の防御力の補正をかける）
                 //防御率
-                float defenseRate = 1 - (EnemyManger.instance.enemyDefense / (EnemyManger.instance.enemyDefense + defenseCoeff));
+                float defenseRate = 1 - (EnemyManager.instance.enemyDefense / (EnemyManager.instance.enemyDefense + defenseCoeff));
                 //ダメージ計算
                 float damage = Mathf.Round((Player.instance.playerAttack * criticalMag) * defenseRate);
 
-                EnemyManger.instance.currentEnemyHealth -= damage;
+                EnemyManager.instance.currentEnemyHealth -= damage;
 
                 //ダメージテキスト
                 PlayerToEnemyCriticalDamageText(damage);
@@ -506,11 +506,11 @@ public class GameManager : MonoBehaviour
             {
                 //ダメ―ジ計算　→　敵のHPからプレイヤー攻撃力分減らす（敵の防御力の補正をかける）
                 //防御率
-                float defenseRate = 1 - (EnemyManger.instance.enemyDefense / (EnemyManger.instance.enemyDefense + defenseCoeff));
+                float defenseRate = 1 - (EnemyManager.instance.enemyDefense / (EnemyManager.instance.enemyDefense + defenseCoeff));
                 //ダメージ計算
                 float damage = Mathf.Round(Player.instance.playerAttack * defenseRate);
 
-                EnemyManger.instance.currentEnemyHealth -= damage;
+                EnemyManager.instance.currentEnemyHealth -= damage;
 
                 //ダメージテキスト
                 PlayerToEnemyDamageText(damage);
@@ -550,11 +550,11 @@ public class GameManager : MonoBehaviour
     {
         //ダメ―ジ計算　→　敵のHPからプレイヤー攻撃力分減らす（敵の防御力の補正をかける）
         //防御率
-        float defenseRate = 1 - (EnemyManger.instance.enemyDefense / (EnemyManger.instance.enemyDefense + defenseCoeff));
+        float defenseRate = 1 - (EnemyManager.instance.enemyDefense / (EnemyManager.instance.enemyDefense + defenseCoeff));
         //ダメージ計算
         float damage = Mathf.Round((Player.instance.playerAttack * attackRate) * defenseRate);
 
-        EnemyManger.instance.currentEnemyHealth -= damage;
+        EnemyManager.instance.currentEnemyHealth -= damage;
 
         PlayerToEnemyDamageText(damage);
 
@@ -568,7 +568,7 @@ public class GameManager : MonoBehaviour
         {
             float extraDamage = Mathf.Round(damage * extraDamageRate);
 
-            EnemyManger.instance.currentEnemyHealth -= extraDamage;
+            EnemyManager.instance.currentEnemyHealth -= extraDamage;
 
             //吸血の牙での回復（追撃にも適応）
             Player.instance.FangAbsorption(extraDamage);
@@ -610,11 +610,11 @@ public class GameManager : MonoBehaviour
             //クリティカル確認
             float criticalCheck = Random.Range(0.0f, 1.0f);
 
-            if (criticalCheck < EnemyManger.instance.enemyCriticalRate)
+            if (criticalCheck < EnemyManager.instance.enemyCriticalRate)
             {
                 //クリティカル(1.5倍)ダメ―ジ計算
                 //ダメージ計算
-                float damage = Mathf.Round(EnemyManger.instance.enemyAttack * criticalMag);
+                float damage = Mathf.Round(EnemyManager.instance.enemyAttack * criticalMag);
 
 
                 //ダメージテキスト
@@ -650,7 +650,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 //ダメージ計算(クリティカルなし)
-                float damage = Mathf.Round(EnemyManger.instance.enemyAttack);
+                float damage = Mathf.Round(EnemyManager.instance.enemyAttack);
 
                 //ダメージテキスト
                 EnemyToPlayerDamageText(damage);
@@ -868,7 +868,7 @@ public class GameManager : MonoBehaviour
                 {
 
                     //武器アイコンについているWeaponMangerを格納
-                    weaponSkill = hit2d.collider.gameObject.GetComponent<WeaponManger>();
+                    weaponSkill = hit2d.collider.gameObject.GetComponent<WeaponManager>();
 
 
                     for (int i = 0; i < playerGotWeaponList.Count; i++)
@@ -897,7 +897,7 @@ public class GameManager : MonoBehaviour
                     SoundManager.instance.PlaySE(SoundType.Select);
 
                     //武器アイコンについているWeaponMangerを格納
-                    weaponSkill = hit2d.collider.gameObject.GetComponent<WeaponManger>();
+                    weaponSkill = hit2d.collider.gameObject.GetComponent<WeaponManager>();
 
                     for (int i = 0; i < playerGotWeaponList.Count; i++)
                     {
@@ -1058,7 +1058,7 @@ public class GameManager : MonoBehaviour
             float damage = Player.instance.specialEnergy * 5;
 
             //ダメージ計算
-            EnemyManger.instance.currentEnemyHealth -= damage;
+            EnemyManager.instance.currentEnemyHealth -= damage;
 
             //ダメージテキスト表示
             PlayerToEnemyDamageText(damage);
@@ -1235,7 +1235,7 @@ public class GameManager : MonoBehaviour
                     selectWeapon = hit2d.collider.gameObject;
 
                     //選択した武器アイコンについているWeaponMangerを格納
-                    weaponSkill = selectWeapon.GetComponent<WeaponManger>();
+                    weaponSkill = selectWeapon.GetComponent<WeaponManager>();
 
                     SoundManager.instance.PlaySE(SoundType.Select);
 
@@ -1516,7 +1516,7 @@ public class GameManager : MonoBehaviour
     //敵へのダメージテキスト表示関数
     private void PlayerToEnemyDamageText(float damage)
     {
-        GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
+        GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManager.instance.enemyPos.transform.position, Quaternion.identity);
 
         damageText.GetComponentInChildren<Text>().text = damage.ToString();
 
@@ -1525,7 +1525,7 @@ public class GameManager : MonoBehaviour
     //敵へのクリティカルダメージテキスト表示関数
     private void PlayerToEnemyCriticalDamageText(float damage)
     {
-        GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
+        GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManager.instance.enemyPos.transform.position, Quaternion.identity);
 
         damageText.GetComponentInChildren<Text>().text = "Critical\n" + damage;
 
@@ -1536,20 +1536,20 @@ public class GameManager : MonoBehaviour
     {
         if (skillFlag == daggerBuff)//短剣
         {
-            GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position + new Vector3(-0.5f,0.5f,0), Quaternion.identity);
+            GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManager.instance.enemyPos.transform.position + new Vector3(-0.5f,0.5f,0), Quaternion.identity);
 
             damageText.GetComponentInChildren<Text>().text = damage.ToString();
 
             damageText.GetComponentInChildren<Text>().fontSize = 50;
         }else if (skillFlag == chakramBuff)//チャクラム
         {
-            GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position + new Vector3(-0.5f, 1, 0), Quaternion.identity);
+            GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManager.instance.enemyPos.transform.position + new Vector3(-0.5f, 1, 0), Quaternion.identity);
 
             damageText.GetComponentInChildren<Text>().text = damage.ToString();
             damageText.GetComponentInChildren<Text>().fontSize = 50;
         }else if (skillFlag == Player.instance.isRing)//指輪
         {
-            GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position + new Vector3(-0.5f, 1.5f, 0), Quaternion.identity);
+            GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManager.instance.enemyPos.transform.position + new Vector3(-0.5f, 1.5f, 0), Quaternion.identity);
 
             damageText.GetComponentInChildren<Text>().text = damage.ToString();
             damageText.GetComponentInChildren<Text>().fontSize = 50;
@@ -1560,7 +1560,7 @@ public class GameManager : MonoBehaviour
     //敵へのミステキスト表示関数
     private void PlayerMissText()
     {
-        GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
+        GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManager.instance.enemyPos.transform.position, Quaternion.identity);
 
         damageText.GetComponentInChildren<Text>().text = "Miss";
 
