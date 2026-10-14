@@ -15,7 +15,6 @@ public class EnemyManger : MonoBehaviour
     private List<GameObject> enemySprite;
 
     //エネミーの攻撃力
-    [SerializeField]
     public float enemyAttack;
 
     //エネミーのMax体力
@@ -23,19 +22,15 @@ public class EnemyManger : MonoBehaviour
     private float enemyMaxHealth;
 
     //エネミーの現在の体力
-    [SerializeField]
     public float currentEnemyHealth;
 
     //エネミーの回避率
-    [SerializeField]
     public float enemyEvasionRate;
 
     //エネミーのクリティカル率
-    [SerializeField]
     public float enemyCriticalRate;
 
     //エネミーの防御力
-    [SerializeField]
     public float enemyDefense;
 
 
@@ -46,28 +41,27 @@ public class EnemyManger : MonoBehaviour
     private float baseHealth = 15f;
 
     //エネミーのベース回避率
-    private float baseEvasionRate = 0.05f;
+    private readonly float baseEvasionRate = 0.05f;
 
     //エネミーのベースクリティカル率
-    private float baseCriticalRate = 0.1f;
+    private readonly float baseCriticalRate = 0.1f;
 
     //エネミーのベース防御力
     private float baseDefense = 5f;
 
     //攻撃力、体力、防御力の成長率
-    private float growthRate = 0.2f;
+    private readonly float growthRate = 0.2f;
 
     //回避率成長率
-    private float evasionGrowthRate = 0.015f;
+    private readonly float evasionGrowthRate = 0.015f;
 
     //クリティカル率成長率
-    private float criticalGrowthRate = 0.02f;
+    private readonly float criticalGrowthRate = 0.02f;
 
     //ステータスのランダム補正値
     private float randAttack, randHealth, randDefense;
 
     //エネミーの表示位置
-    [SerializeField]
     public GameObject enemyPos, bossEnemyPos;
 
     //ターンが加算されたかの判定
@@ -146,8 +140,6 @@ public class EnemyManger : MonoBehaviour
         }
     }
 
-
-    // Start is called before the first frame update
     void Start()
     {
         turnAddEnemy = true;
@@ -155,7 +147,6 @@ public class EnemyManger : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -170,7 +161,7 @@ public class EnemyManger : MonoBehaviour
         ShowDebuffIcon();
 
 
-        //バトル開始じ一度だけエネミーのステータスが決定される
+        //バトル開始時一度だけエネミーのステータスが決定される
         if (GameManager.instance.battleStart)
         {
             //10の倍数Waveにボススポーン
@@ -210,7 +201,7 @@ public class EnemyManger : MonoBehaviour
                 }
                 else 
                 {
-                    Invoke("EnemyAttack", attackTime);
+                    Invoke(nameof(EnemyAttack), attackTime);
                     enemyAttacked = true;
                 }
 
@@ -374,11 +365,11 @@ public class EnemyManger : MonoBehaviour
     {
 
         //ステータスデバフ
-        enemyAttack = enemyAttack * (1 - attackDebuffRate);
+        enemyAttack *= (1 - attackDebuffRate);
 
-        enemyDefense = enemyDefense * (1 - defenseDebuffRate);
+        enemyDefense *= (1 - defenseDebuffRate);
 
-        enemyEvasionRate = enemyEvasionRate * (1 - evasionDebuffRate);
+        enemyEvasionRate *= (1 - evasionDebuffRate);
 
         //デバフエフェクト
         Instantiate(deBuffEffect,spawnEnemy.transform.position, Quaternion.identity);
@@ -420,6 +411,7 @@ public class EnemyManger : MonoBehaviour
 
     }
 
+    //ボス配置関数
     private void BossEnemySpawn()
     {
         //スプライト番号
@@ -492,8 +484,6 @@ public class EnemyManger : MonoBehaviour
             //ダメージ計算
             GameManager.instance.EnemyToPlayerDamage();
 
-            //エネミーの攻撃アニメーション
-
             //攻撃エフェクト
             Instantiate(attackEffect,effectPos.transform.position,Quaternion.identity);
 
@@ -545,7 +535,7 @@ public class EnemyManger : MonoBehaviour
             {
                 if (enemyDebuffIcons[i].name == "DefenseDown")
                 {
-                    //攻撃力ダウンアイコンが無ければリストに追加
+                    //防御ダウンアイコンが無ければリストに追加
                     if (!enemyDebuffList.Any(obj => obj.name == enemyDebuffIcons[i].name))
                     {
                         enemyDebuffList.Add(enemyDebuffIcons[i]);
@@ -561,7 +551,7 @@ public class EnemyManger : MonoBehaviour
             {
                 if (enemyDebuffIcons[i].name == "EvasionRateDown")
                 {
-                    //攻撃力ダウンアイコンが無ければリストに追加
+                    //回避ダウンアイコンが無ければリストに追加
                     if (!enemyDebuffList.Any(obj => obj.name == enemyDebuffIcons[i].name))
                     {
                         enemyDebuffList.Add(enemyDebuffIcons[i]);
@@ -577,7 +567,7 @@ public class EnemyManger : MonoBehaviour
             {
                 if (enemyDebuffIcons[i].name == "Stan")
                 {
-                    //攻撃力ダウンアイコンが無ければリストに追加
+                    //スタンアイコンが無ければリストに追加
                     if (!enemyDebuffList.Any(obj => obj.name == enemyDebuffIcons[i].name))
                     {
                         enemyDebuffList.Add(enemyDebuffIcons[i]);

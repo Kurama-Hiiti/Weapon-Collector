@@ -11,12 +11,10 @@ public class Player : MonoBehaviour
     public static Player instance;
 
     //初期値ステータス　攻撃力5、体力10
-    [SerializeField]
     [Tooltip("初期値")]
     public float originAttack, originHealth;
 
     //初期ステータス　回避率10%、クリティカル率10%
-    [SerializeField]
     [Tooltip("初期値")]
     public float originEvasionRate, originCriticalRate;
 
@@ -30,17 +28,14 @@ public class Player : MonoBehaviour
 
 
     //プレイヤーの総ステータス　攻撃力、体力
-    [SerializeField]
     [Tooltip("武器と初期値の合計値")]
     public float playerAttack, playerHealth;
 
     //プレイヤーの変動するHP
-    [SerializeField]
     [Tooltip("プレイヤーの現在のHP")]
     public float currentPlayerHealth;
 
     //プレイヤーの総ステータス　回避率、クリティカル率
-    [SerializeField]
     [Tooltip("バフ込みのステータス")]
     public float playerEvasionRate, playerCriticalRate;
 
@@ -55,7 +50,6 @@ public class Player : MonoBehaviour
 
 
     //闘気の数
-    [SerializeField]
     [Tooltip("闘気の数")]
     public float specialEnergy;
 
@@ -63,13 +57,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float maxSpecialEnergy = 50;
 
-    [SerializeField]
     //武器スロット
     [Tooltip("装備されている武器スロット")]
     public List<GameObject> Weapon;
 
     //アイテムスロット
-    [SerializeField]
     [Tooltip("装備されているアイテムスロット")]
     public List<GameObject> Item;
 
@@ -123,11 +115,10 @@ public class Player : MonoBehaviour
     private Image playerHpBarImage;
 
     //プレイヤーが所持している武器アイコンの親オブジェクト
-    [SerializeField]
     public GameObject haveItemMass;
 
     //プレイヤーのバトル時の位置
-    [SerializeField]
+
     public Transform playerBattlePos;
 
     //プレイヤーのポップ位置
@@ -179,7 +170,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Text playerEnergyText;
 
-    //バフアイコンリスト（種類）
+    //バフアイコンリスト
     [SerializeField]
     private GameObject[] buffIcons;
 
@@ -225,10 +216,9 @@ public class Player : MonoBehaviour
     }
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        //プレイヤーのモーションの関数使用のため
+        //プレイヤーのモーションの関数使用のためコンポーネント取得
         playerAnimation = GetComponent<SPUM_Prefabs>();
         turnAddPlayer = false;
         isOneFunc = false;
@@ -259,7 +249,6 @@ public class Player : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         //HPバーの表示更新
@@ -301,15 +290,10 @@ public class Player : MonoBehaviour
         }
 
 
-        if (currentPlayerHealth <= 0)
-        {
-            currentPlayerHealth = 0;
-        }
-
         if (isNewWave)
         {
             //プレイヤー移動
-            transform.position += new Vector3(1, 0, 0) * 5.0f * Time.deltaTime;
+            transform.position += (new Vector3(1, 0, 0) * 5.0f) * Time.deltaTime;
             if (playerBattlePos.position.x < transform.position.x)
             {
                 isNewWave = false;
@@ -328,7 +312,7 @@ public class Player : MonoBehaviour
 
         if (GameManager.instance.playerTurn)
         {
-            //ターンが一度だけ加算される
+            //ターンに一度だけ実行される
             if (!turnAddPlayer)
             {
                 PlayerStartSetMass();
@@ -341,7 +325,7 @@ public class Player : MonoBehaviour
         if (GameManager.instance.nextWave)
         {
             //プレイヤー移動
-            transform.position += new Vector3(1, 0, 0) * 5.0f * Time.deltaTime;
+            transform.position += (new Vector3(1, 0, 0) * 5.0f) * Time.deltaTime;
 
             if (isOneFunc)
             {
@@ -464,21 +448,26 @@ public class Player : MonoBehaviour
 
 
 
-        playerCriticalRate = originCriticalRate;
-        playerEvasionRate = originEvasionRate;
 
         //レンズ持っているときクリティカル率20%UP
         if (isGlasses)
         {
-            playerCriticalRate = playerCriticalRate + 0.2f;
+            playerCriticalRate = originCriticalRate + 0.2f;
+        }
+        else
+        {
+            playerCriticalRate = originCriticalRate;
         }
 
         //ブーツ持ってるとき回避率20%UP
         if (isBoots)
         {
-            playerEvasionRate = playerEvasionRate + 0.2f;
+            playerEvasionRate = originEvasionRate + 0.2f;
         }
-
+        else
+        {
+            playerEvasionRate = originEvasionRate;
+        }
 
 
         //バフ管理用ステータス
@@ -507,11 +496,12 @@ public class Player : MonoBehaviour
                 //ボタンを押した時のSE
                 SoundManager.instance.PlaySE(SoundType.AttackButton);
 
-                Invoke("PlayerAttackProcess", 0.5f);
+                Invoke(nameof(PlayerAttackProcess), 0.5f);
 
+                //二回攻撃
                 if (tonfaBuff)
                 {
-                    Invoke("PlayerDoubleAttack", 1.0f);
+                    Invoke(nameof(PlayerDoubleAttack), 1.0f);
                 }
             }
             
@@ -558,6 +548,7 @@ public class Player : MonoBehaviour
 
     }
 
+    //2回攻撃用関数
     private void PlayerDoubleAttack()
     {
         //ダメージ計算
@@ -593,6 +584,7 @@ public class Player : MonoBehaviour
         tonfaBuff = false;
     }
 
+    //メイン武器の種類を判定して表示する
     private void MainWeaponDisplay()
     {
         if (weaponPhaseNum == 0)
@@ -696,6 +688,7 @@ public class Player : MonoBehaviour
             //リストに追加
             Weapon.Add(addWeapon);
 
+            //追加した武器の親オブジェクトを指定
             addWeapon.transform.parent = haveItemMass.transform;
 
 
@@ -708,7 +701,7 @@ public class Player : MonoBehaviour
             }
 
             //プレイヤーのステータス更新
-            Invoke("PlayerStatas", 0.2f);
+            Invoke(nameof(PlayerStatas), 0.2f);
 
             //次のシーンへの遷移フラグ
             GameManager.instance.nextWave = true;
@@ -719,10 +712,6 @@ public class Player : MonoBehaviour
             isWeaponChange = true;
             GameManager.instance.changeWeapon = addWeapon;
         }
-        
-
-        
-
 
     }
 
@@ -734,7 +723,7 @@ public class Player : MonoBehaviour
             //リストに追加
             Item.Add(addItem);
 
-            //指定の場所の子要素にする
+            //追加したアイテムの親オブジェクトを指定
             addItem.transform.parent = haveItemMass.transform;
 
             for (int i = 0; i < Item.Count; i++) 
@@ -767,7 +756,7 @@ public class Player : MonoBehaviour
             //リストに追加
             Item.Add(addItem);
 
-            //指定の場所の子要素にする
+            //追加したアイテムの親オブジェクトを指定
             addItem.transform.parent = haveItemMass.transform;
 
             for (int i = 0; i < Item.Count; i++)
@@ -803,6 +792,8 @@ public class Player : MonoBehaviour
     {
         //攻撃アニメーションを実行
         playerAnimation.PlayAnimation(4);
+
+        //攻撃エフェクト生成
         Instantiate(attackEffect, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
     }
 
@@ -815,8 +806,8 @@ public class Player : MonoBehaviour
         playerAttack += playerAttack * attackBuffRate;
 
         //回避率、クリティカル率は加算
-        playerEvasionRate = playerEvasionRate + evasionBuffRate;
-        playerCriticalRate = playerCriticalRate + criticalBuffRate;
+        playerEvasionRate += evasionBuffRate;
+        playerCriticalRate += criticalBuffRate;
 
     }
 
@@ -842,6 +833,7 @@ public class Player : MonoBehaviour
 
     }
 
+    //刀と細剣のバフ管理
     private void SaberAndRapierBuffProcess()
     {
         if (saberBuff && rapierBuff)
@@ -1236,16 +1228,17 @@ public class Player : MonoBehaviour
     }
 
 
-    //プレイヤーのステータス更新武器入れ替え時
+    //プレイヤーのステータス更新
     public void PlayerStatusUpdate()
     {
         //プレイヤーのステータス更新
-        Invoke("PlayerStatas", 0.2f);
+        Invoke(nameof(PlayerStatas), 0.2f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Next")
+        //次のWaveへ行く際にプレイヤーが端へ到達した時に位置を変更する
+        if (collision.gameObject.CompareTag("Next"))
         {
             transform.position = playerPopPos.position;
 

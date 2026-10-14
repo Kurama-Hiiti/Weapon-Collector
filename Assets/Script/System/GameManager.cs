@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -32,19 +33,19 @@ public class GameManager : MonoBehaviour
     public float diffMultiplier;
 
     //ステータス変動率
-    private float nomalDiffMultiplier = 1.0f;
-    private float hardDiffMultiplier = 1.2f;
-    private float veryHardDiffMultiplier = 1.5f;
+    private readonly float nomalDiffMultiplier = 1.0f;
+    private readonly float hardDiffMultiplier = 1.2f;
+    private readonly float veryHardDiffMultiplier = 1.5f;
 
 
     //戦闘開始、終了フラグ
     public bool battleStart, battleEnd;
 
     //クリティカル倍率（1.5倍）
-    private float criticalMag = 1.5f;
+    private readonly float criticalMag = 1.5f;
 
     //防御係数
-    private float defenseCoeff = 100;
+    private readonly float defenseCoeff = 100;
 
     //ドロップ率
     [SerializeField]
@@ -81,11 +82,9 @@ public class GameManager : MonoBehaviour
     private List<GameObject> iconList;
 
     //プレイヤーが獲得した武器のカードを格納する（武器のスキル使用時やアイテム使用時に使用する）
-    [SerializeField]
     public List<GameObject> playerGotWeaponList;
 
     //プレイヤーが獲得したアイテムのカードを格納する（武器のスキル使用時やアイテム使用時に使用する）
-    [SerializeField]
     public List<GameObject> playerGotItemList;
 
     //次のWaveへの遷移フラグ
@@ -129,7 +128,7 @@ public class GameManager : MonoBehaviour
     public bool daggerBuff, chakramBuff;
 
     //追撃倍率
-    private float daggerRate = 0.2f, chakramRate = 0.3f, ringRate = 0.1f;
+    private readonly float daggerRate = 0.2f, chakramRate = 0.3f, ringRate = 0.1f;
 
     //初期アイテムゲットフラグ
     private bool isFirstItemGet;
@@ -155,7 +154,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Text waveText;
 
-    //敵のダメージテキスト
+    //敵、プレイヤーのダメージテキスト、プレイヤーの回復テキスト
     [SerializeField]
     private GameObject enemyDamageTextCanvas, playerDamageTextCanvas, playerHealTextCanvas;
 
@@ -214,9 +213,9 @@ public class GameManager : MonoBehaviour
     }
 
 
-    // Start is called before the first frame update
     void Start()
     {
+        //初期化
         playerTurn = false;
         enemyTurn = false;
         battleEnd = false;
@@ -228,8 +227,10 @@ public class GameManager : MonoBehaviour
         enemyTurnNum = 0;
         waveNum = 1;
 
+        //所持金取得
         playerAllMoney = PlayerPrefs.GetInt("PlayerGetMoney", 0);
 
+        //難易度別の設定定義処理
         if (UIManager.instance.sceneName == "GameMainNomal")
         {
             battleStart = true;
@@ -251,11 +252,11 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (UIManager.instance.sceneName == "GameMainNomal" || UIManager.instance.sceneName == "GameMainHard" || UIManager.instance.sceneName == "GameMainVeryHard")
         {
+            //Wave数テキスト表示
             if (waveText != null)
             {
                 waveText.text = "Wave " + waveNum + " / " + maxWaveNum;
@@ -265,8 +266,10 @@ public class GameManager : MonoBehaviour
             //プレイヤーのターンの時のみクリック判定あり
             if (playerTurn)
             {
+                //武器、アイテム、スキルのクリック処理
                 ItemClick();
 
+                //メイン武器とプレイヤーへカーソルを合わせた際に詳細表示処理
                 ShowMainWeaponDetailAndStatus();
 
                 //獲得したお金のテキスト表記
@@ -283,9 +286,11 @@ public class GameManager : MonoBehaviour
                     isWeaponChangeTextDisplay = true;
                 }
 
+                //武器変更のための変更したい武器の選択処理
                 WeaponChange();
             }
 
+            //アイテム入れ替え処理
             if (Player.instance.isItemChange)
             {
                 if (!isItemChangeTextDisplay)
@@ -295,7 +300,7 @@ public class GameManager : MonoBehaviour
                     isItemChangeTextDisplay = true;
                 }
 
-                //アイテム入れ替え処理関数
+                //アイテム変更のための変更したいアイテムの選択処理
                 ItemChange();
 
             }
@@ -313,6 +318,7 @@ public class GameManager : MonoBehaviour
 
                 if (!isFirstItemGet)
                 {
+                    //初期装備取得処理
                     FirstItem();
                     isFirstItemGet = true;
                 }
@@ -324,6 +330,7 @@ public class GameManager : MonoBehaviour
             {
                 if (!isPlaerDeath)
                 {
+                    //プレイヤーの死亡アニメーション実行処理
                     Player.instance.PlyaerDeath();
                     playerTurn = false;
                     isPlaerDeath = true;
@@ -331,8 +338,9 @@ public class GameManager : MonoBehaviour
                     SoundManager.instance.GameOverBGM();
 
                     //ゲームオーバーUIを表示
-                    Invoke("ShowGameOverPanel", 0.5f);
+                    Invoke(nameof(ShowGameOverPanel), 0.5f);
 
+                    //取得したお金の追加処理
                     GetMoney();
 
                     //ステータスボード非表示
@@ -377,7 +385,7 @@ public class GameManager : MonoBehaviour
                 //ラストWave時
                 if (waveNum == maxWaveNum)
                 {
-                    Invoke("ShowGameClearPanel", 0.5f);
+                    Invoke(nameof(ShowGameClearPanel), 0.5f);
 
                     if (!isGetMoney)
                     {
@@ -387,10 +395,8 @@ public class GameManager : MonoBehaviour
                         //所持金加算
                         Player.instance.playerMoney += dropMoney;
 
-                        int money = Player.instance.playerMoney;
-
                         //獲得したお金のテキスト表記
-                        moneyText.text = ":" + money;
+                        moneyText.text = ":" + Player.instance.playerMoney;
 
                         GetMoney();
 
@@ -420,7 +426,7 @@ public class GameManager : MonoBehaviour
                         //獲得したお金のテキスト表記
                         moneyText.text = ":" + Player.instance.playerMoney;
 
-                        Invoke("ItemDrop", 0.5f);
+                        Invoke(nameof(ItemDrop), 0.5f);
                         isDrop = true;
                     }
 
@@ -482,11 +488,12 @@ public class GameManager : MonoBehaviour
                 EnemyManger.instance.currentEnemyHealth -= damage;
 
                 //ダメージテキスト
-                PlyaerToEnemyCriticalDamageText(damage);
+                PlayerToEnemyCriticalDamageText(damage);
 
                 //吸血の牙での回復
                 Player.instance.FangAbsorption(damage);
 
+                //追撃ダメージ処理
                 ExtraDamage(damage, daggerRate, ref daggerBuff);
                 ExtraDamage(damage, chakramRate, ref chakramBuff);
                 ExtraDamage(damage, ringRate, ref Player.instance.isRing);
@@ -506,11 +513,12 @@ public class GameManager : MonoBehaviour
                 EnemyManger.instance.currentEnemyHealth -= damage;
 
                 //ダメージテキスト
-                PlyaerToEnemyDamageText(damage);
+                PlayerToEnemyDamageText(damage);
 
                 //吸血の牙での回復
                 Player.instance.FangAbsorption(damage);
 
+                //追撃ダメージ処理
                 ExtraDamage(damage, daggerRate, ref daggerBuff);
                 ExtraDamage(damage, chakramRate, ref chakramBuff);
                 ExtraDamage(damage, ringRate, ref Player.instance.isRing);
@@ -548,7 +556,7 @@ public class GameManager : MonoBehaviour
 
         EnemyManger.instance.currentEnemyHealth -= damage;
 
-        PlyaerToEnemyDamageText(damage);
+        PlayerToEnemyDamageText(damage);
 
         SoundManager.instance.PlaySE(SoundType.Attack);
     }
@@ -565,19 +573,15 @@ public class GameManager : MonoBehaviour
             //吸血の牙での回復（追撃にも適応）
             Player.instance.FangAbsorption(extraDamage);
 
-            PlyaerToEnemyExtraDamageText(extraDamage, skillFlag);
+            PlayerToEnemyExtraDamageText(extraDamage, skillFlag);
 
             //衝撃の指輪の効果の場合はフラグをfalseにしない
-            if (skillFlag == daggerBuff || skillFlag == chakramBuff)
-            {
-                skillFlag = false;
-            }
-            else if (skillFlag == Player.instance.isRing)
+            if (skillFlag == Player.instance.isRing)
             {
                 return;
             }
 
-
+            skillFlag = false;
             
         }
     }
@@ -623,7 +627,7 @@ public class GameManager : MonoBehaviour
                 if (Player.instance.blockNum > 0)
                 {
                     //ブロック値がある時はブロック値からダメージ計算
-                    Player.instance.blockNum = Player.instance.blockNum - damage;
+                    Player.instance.blockNum -= damage;
 
                    
                     if (Player.instance.blockNum < 0)
@@ -654,10 +658,11 @@ public class GameManager : MonoBehaviour
                 //SE
                 SoundManager.instance.PlaySE(SoundType.Damage);
 
+                //プレイヤーにブロックがあるかの判定
                 if (Player.instance.blockNum > 0)
                 {
                     //ブロック値がある時はブロック値からダメージ計算
-                    Player.instance.blockNum = Player.instance.blockNum - damage;
+                    Player.instance.blockNum -= damage;
                     
                     if (Player.instance.blockNum < 0)
                     {
@@ -732,6 +737,7 @@ public class GameManager : MonoBehaviour
 
             }
         }
+
         itemGetPanel.SetActive(true);
 
         SoundManager.instance.PlaySE(SoundType.Drop);
@@ -744,10 +750,6 @@ public class GameManager : MonoBehaviour
         dropItem = Instantiate(dropItemList[9], cardPos.position, Quaternion.identity);
 
         dropItem.name = dropItemList[9].name;
-
-        //ドロップアイテムについているスクリプトを格納
-        WeaponCard card = dropItem.GetComponent<WeaponCard>();
-
 
         GameObject getItem = Instantiate(iconList[33]);
 
@@ -791,6 +793,7 @@ public class GameManager : MonoBehaviour
 
                     getItem.SetActive(false);
 
+                    //入手したアイテムをスロットに入れる
                     Player.instance.AddWeapon(getItem);
 
                     //入手した武器リストへ格納
@@ -861,7 +864,7 @@ public class GameManager : MonoBehaviour
             {
 
                 //武器アイコンクリック時
-                if (hit2d.collider.gameObject.tag == "Weapon")
+                if (hit2d.collider.CompareTag("Weapon"))
                 {
 
                     //武器アイコンについているWeaponMangerを格納
@@ -871,8 +874,6 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < playerGotWeaponList.Count; i++)
                     {
                         SoundManager.instance.PlaySE(SoundType.Select);
-
-                        WeaponCard card = playerGotWeaponList[i].GetComponent<WeaponCard>();
 
                         if (i == weaponSkill.thisWeaponListNum - 1)
                         {
@@ -891,7 +892,7 @@ public class GameManager : MonoBehaviour
 
 
                 //スキル武器クリック時
-                if (hit2d.collider.gameObject.tag == "SkillWeapon")
+                if (hit2d.collider.CompareTag("SkillWeapon"))
                 {
                     SoundManager.instance.PlaySE(SoundType.Select);
 
@@ -900,7 +901,6 @@ public class GameManager : MonoBehaviour
 
                     for (int i = 0; i < playerGotWeaponList.Count; i++)
                     {
-                        WeaponCard card = playerGotWeaponList[i].GetComponent<WeaponCard>();
 
                         if (i == weaponSkill.thisWeaponListNum - 1)
                         {
@@ -917,8 +917,8 @@ public class GameManager : MonoBehaviour
                     }
                 }
 
-                //アイテムアイコンクリック時  武器と同じようにする持ってるアイテムの番号で管理　ItemManagerを作る
-                if (hit2d.collider.gameObject.tag == "Item")
+                //アイテムアイコンクリック時
+                if (hit2d.collider.CompareTag("Item"))
                 {
                     SoundManager.instance.PlaySE(SoundType.Select);
 
@@ -927,7 +927,6 @@ public class GameManager : MonoBehaviour
 
                     for (int i = 0; i < playerGotItemList.Count; i++)
                     {
-                        WeaponCard card = playerGotItemList[i].GetComponent<WeaponCard>();
 
                         if (i == itemEffect.thisItemListNum)
                         {
@@ -945,13 +944,13 @@ public class GameManager : MonoBehaviour
                 }
 
                 //プレイヤースキルクリック時
-                if (hit2d.collider.gameObject.tag == "PlayerSkill")
+                if (hit2d.collider.CompareTag("PlayerSkill"))
                 {
                     SoundManager.instance.PlaySE(SoundType.Select);
 
                     string skillName = hit2d.collider.gameObject.name;
 
-                    //プレイヤースキルスキル使用確認画面表示関数作成
+                    //プレイヤースキル,スキル使用確認画面表示
                     ShowPlayerSkill(skillName);
                 }
 
@@ -961,7 +960,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    //プレイヤースキルスキル使用確認画面表示関数作成
+    //プレイヤースキル,スキル使用確認画面表示関数
     private void ShowPlayerSkill(string skill)
     {
 
@@ -1006,14 +1005,14 @@ public class GameManager : MonoBehaviour
             //ボタンクリック音
             SoundManager.instance.PlaySE(SoundType.SystemButton);
 
-            Invoke("PlayerSkillProcess", 0.5f);
+            Invoke(nameof(PlayerSkillProcess), 0.5f);
 
         }
         else
         {
             //使用不可ＳＥ
             SoundManager.instance.PlaySE(SoundType.NotSelect);
-            Debug.Log("使用不可");
+
         }
         
     }
@@ -1027,54 +1026,64 @@ public class GameManager : MonoBehaviour
             //攻撃力バフスキル 消費した闘気×5%の値加算
             Player.instance.playerSkillBuff = true;
 
+            //加算する攻撃力計算
             float attackBuffRate = Player.instance.specialEnergy * 0.05f;
 
+            //ステータス更新処理
             Player.instance.StatusBuff(attackBuffRate, 0, 0);
 
             SoundManager.instance.PlaySE(SoundType.Buff);
 
+            //闘気を0にする
             Player.instance.specialEnergy = 0;
 
         }
         else if (playerSkillNum == 2)
         {
-            //ブロック付与
+            //ブロック付与 （消費する闘気の二倍のブロックを付与する）
             float grantBlockNum = Player.instance.specialEnergy * 2;
 
+            //ブロックの値加算
             Player.instance.blockNum += grantBlockNum;
 
             SoundManager.instance.PlaySE(SoundType.Buff);
 
+            //闘気を0にする
             Player.instance.specialEnergy = 0;
 
         }
         else if (playerSkillNum == 3)
         {
-            //強攻撃
+            //強攻撃 消費する闘気の五倍のダメージ
             float damage = Player.instance.specialEnergy * 5;
 
+            //ダメージ計算
             EnemyManger.instance.currentEnemyHealth -= damage;
 
-            PlyaerToEnemyDamageText(damage);
+            //ダメージテキスト表示
+            PlayerToEnemyDamageText(damage);
 
             //攻撃モーション
             Player.instance.PlayerAttackAnimation();
 
             SoundManager.instance.PlaySE(SoundType.Attack);
 
+            //闘気を0にする
             Player.instance.specialEnergy = 0;
 
         }
         else if (playerSkillNum == 4)
         {
-            //体力回復
+            //体力回復 消費する闘気の二倍の値回復
             float healNum = Player.instance.specialEnergy * 2;
 
+            //回復処理
             Player.instance.currentPlayerHealth += healNum;
 
             //回復したテキスト表示
             PlayerHealText(healNum);
 
+            //体力の最大値を超える場合は最大体力値にする
             if (Player.instance.playerHealth < Player.instance.currentPlayerHealth)
             {
                 Player.instance.currentPlayerHealth = Player.instance.playerHealth;
@@ -1082,6 +1091,7 @@ public class GameManager : MonoBehaviour
 
             SoundManager.instance.PlaySE(SoundType.Buff);
 
+            //闘気を0にする
             Player.instance.specialEnergy = 0;
         }
     }
@@ -1096,7 +1106,7 @@ public class GameManager : MonoBehaviour
         playerSkill4.SetActive(false);
     }
 
-    //メイン武器の詳細表示
+    //メイン武器の詳細表示,プレイヤーのステータス表示
     private void ShowMainWeaponDetailAndStatus()
     {
         //レイを飛ばしてあたったコライダーを判定する
@@ -1123,7 +1133,7 @@ public class GameManager : MonoBehaviour
             {
                 mainWeapon3Detail.SetActive(true);
             }
-            else if(hit2d.collider.tag == "Player")
+            else if(hit2d.collider.CompareTag("Player"))
             {
                 //ステータスボード表示
                 ShowStatusBoad();
@@ -1156,7 +1166,7 @@ public class GameManager : MonoBehaviour
     {
         statusBoad.SetActive(true);
 
-        //攻撃力を整数化回避率とクリティカル率を％表示
+        //攻撃力を整数化,回避率とクリティカル率を％表示
 
         float attackTextNum = Mathf.Round(Player.instance.playerAttack);
 
@@ -1219,15 +1229,17 @@ public class GameManager : MonoBehaviour
             {
 
                 //武器アイコンクリック時
-                if (hit2d.collider.gameObject.tag == "Weapon" || hit2d.collider.gameObject.tag == "SkillWeapon")
+                if (hit2d.collider.CompareTag("Weapon") || hit2d.collider.CompareTag("SkillWeapon"))
                 {
+                    //選択した武器オブジェクト
                     selectWeapon = hit2d.collider.gameObject;
 
-                    //武器アイコンについているWeaponMangerを格納
-                    weaponSkill = hit2d.collider.gameObject.GetComponent<WeaponManger>();
+                    //選択した武器アイコンについているWeaponMangerを格納
+                    weaponSkill = selectWeapon.GetComponent<WeaponManger>();
 
                     SoundManager.instance.PlaySE(SoundType.Select);
 
+                    //選択した武器と所持している武器の整合性を取る
                     for (int i = 0; i < playerGotWeaponList.Count; i++)
                     {
                         if (i == weaponSkill.thisWeaponListNum - 1)
@@ -1276,14 +1288,20 @@ public class GameManager : MonoBehaviour
                 //武器アイコン表示
                 changeWeapon.SetActive(true);
 
-                //今表示している武器カードと新たに加えるカードを入れ替える
-                int listNum =  playerGotWeaponList.IndexOf(viewCard);
+                //入れ替えるアイテムのカードのリスト番号を取得
+                int changeWeaponCardNum =  playerGotWeaponList.IndexOf(viewCard);
 
-                playerGotWeaponList[listNum] = playerGotWeaponList[playerGotWeaponList.Count - 1];
+                //リストの最後尾の番号取得
+                int lastIndex = playerGotWeaponList.Count - 1;
 
+                //交換するカードがplayerGotWeaponListの最後尾に格納されているのでそれと入れ替える
+                playerGotWeaponList[changeWeaponCardNum] = playerGotWeaponList[lastIndex];
+
+                //入れ替え前のカードをリストから除外
                 playerGotWeaponList.Remove(viewCard);
 
-                playerGotWeaponList.RemoveAt(playerGotWeaponList.Count - 1);
+                //最後尾のデータを除外
+                playerGotWeaponList.RemoveAt(lastIndex);
 
                 //表示しているカードを削除
                 Destroy(viewCard);
@@ -1295,7 +1313,7 @@ public class GameManager : MonoBehaviour
             
         }
 
-        //武器入れ替え用パネル表示
+        //武器入れ替え用パネル非表示
         weaponChangePanel.SetActive(false);
 
         //次のシーンへ遷移フラグ
@@ -1307,6 +1325,7 @@ public class GameManager : MonoBehaviour
         //武器入れ替えテキスト非表示
         weaponChangeText.SetActive(false);
 
+        //プレイヤーのステータス更新
         Player.instance.PlayerStatusUpdate();
 
         //武器入れ替えテキスト表示フラグ変更
@@ -1334,7 +1353,7 @@ public class GameManager : MonoBehaviour
             {
 
                 //武器アイコンクリック時
-                if (hit2d.collider.gameObject.tag == "Item")
+                if (hit2d.collider.CompareTag("Item"))
                 {
                     SoundManager.instance.PlaySE(SoundType.Select);
 
@@ -1387,14 +1406,21 @@ public class GameManager : MonoBehaviour
                 //アイテムアイコン表示
                 changeItem.SetActive(true);
 
-                //今表示しているアイテムカードと新たに加えるカードを入れ替える
-                int listNum = playerGotItemList.IndexOf(viewCard);
 
-                playerGotItemList[listNum] = playerGotItemList[playerGotItemList.Count - 1];
+                ////入れ替えるアイテムのカードのリスト番号を取得
+                int changeItemCardNum = playerGotItemList.IndexOf(viewCard);
 
+                //リストの最後尾の番号取得
+                int lastIndex = playerGotItemList.Count - 1;
+
+                //交換するカードがplayerGotItemListの最後尾に格納されているのでそれと入れ替える
+                playerGotItemList[changeItemCardNum] = playerGotItemList[lastIndex];
+
+                //入れ替え前のカードをリストから除外
                 playerGotItemList.Remove(viewCard);
 
-                playerGotItemList.RemoveAt(playerGotItemList.Count - 1);
+                //最後尾のデータを除外
+                playerGotItemList.RemoveAt(lastIndex);
 
                 //表示しているカードを削除
                 Destroy(viewCard);
@@ -1404,7 +1430,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //アイテム入れ替え用パネル表示
+        //アイテム入れ替え用パネル非表示
         itemChangePanel.SetActive(false);
 
         //次のシーンへ遷移フラグ
@@ -1487,8 +1513,8 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //敵のダメージテキスト表示関数
-    private void PlyaerToEnemyDamageText(float damage)
+    //敵へのダメージテキスト表示関数
+    private void PlayerToEnemyDamageText(float damage)
     {
         GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
 
@@ -1496,7 +1522,8 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void PlyaerToEnemyCriticalDamageText(float damage)
+    //敵へのクリティカルダメージテキスト表示関数
+    private void PlayerToEnemyCriticalDamageText(float damage)
     {
         GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position, Quaternion.identity);
 
@@ -1504,22 +1531,23 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void PlyaerToEnemyExtraDamageText(float damage, bool skillFlag)
+    //敵への追撃ダメージテキスト表示関数
+    private void PlayerToEnemyExtraDamageText(float damage, bool skillFlag)
     {
-        if (skillFlag == daggerBuff)
+        if (skillFlag == daggerBuff)//短剣
         {
             GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position + new Vector3(-0.5f,0.5f,0), Quaternion.identity);
 
             damageText.GetComponentInChildren<Text>().text = damage.ToString();
 
             damageText.GetComponentInChildren<Text>().fontSize = 50;
-        }else if (skillFlag == chakramBuff)
+        }else if (skillFlag == chakramBuff)//チャクラム
         {
             GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position + new Vector3(-0.5f, 1, 0), Quaternion.identity);
 
             damageText.GetComponentInChildren<Text>().text = damage.ToString();
             damageText.GetComponentInChildren<Text>().fontSize = 50;
-        }else if (skillFlag == Player.instance.isRing)
+        }else if (skillFlag == Player.instance.isRing)//指輪
         {
             GameObject damageText = Instantiate(enemyDamageTextCanvas, EnemyManger.instance.enemyPos.transform.position + new Vector3(-0.5f, 1.5f, 0), Quaternion.identity);
 
@@ -1548,6 +1576,7 @@ public class GameManager : MonoBehaviour
         damageText.GetComponentInChildren<Text>().text = damage.ToString();
     }
 
+    //プレイヤーのへのクリティカルダメージテキスト
     private void EnemyToPlayerCriticalDamageText(float damage)
     {
         GameObject damageText = Instantiate(playerDamageTextCanvas, Player.instance.playerBattlePos.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
@@ -1576,11 +1605,13 @@ public class GameManager : MonoBehaviour
     //バトル終了時(クリアor失敗)にこのバトル中に獲得したお金を確定する
     public void GetMoney()
     {
-
+        //Playerが所持しているバトル中に獲得したなお金の値を総所持金へ加算
         playerAllMoney += Player.instance.playerMoney;
 
+        //獲得した総所持金をセーブ
         PlayerPrefs.SetInt("PlayerGetMoney", playerAllMoney);
 
+        //バトル中に獲得したお金の値を初期化
         Player.instance.playerMoney = 0;
     }
 

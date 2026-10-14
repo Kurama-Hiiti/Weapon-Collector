@@ -6,6 +6,8 @@ using static SoundManager;
 
 public class GameRuleManager : MonoBehaviour
 {
+    //ゲームのルール説明UIの表示処理
+
     //メインUIパネル
     [SerializeField]
     private GameObject mainPanel;
@@ -118,6 +120,7 @@ public class GameRuleManager : MonoBehaviour
     //ボタン管理
     private void ButtonManager()
     {
+        //最後のページの時は次ページへ遷移するボタンを無効にする
         if (pageNum == rulePage.Length - 1)
         {
             nextButton.GetComponent<Button>().interactable = false;
@@ -127,6 +130,7 @@ public class GameRuleManager : MonoBehaviour
             nextButton.GetComponent<Button>().interactable = true;
         }
 
+        //最初のページの時は前ページへ遷移するボタンを無効にする
         if (pageNum == 0)
         {
             backButton.GetComponent<Button>().interactable = false;

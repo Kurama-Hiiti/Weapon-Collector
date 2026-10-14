@@ -16,7 +16,7 @@ public class WeaponManger : MonoBehaviour
     private string weaponName;
 
     //スキル発動ボタンを押してからスキル発動までのすき間時間
-    private float delayTime = 0.5f;
+    private readonly float delayTime = 0.5f;
 
     //この武器かプレイヤーの武器リストの何番目に入っているかの番号
     public int thisWeaponListNum;
@@ -35,7 +35,7 @@ public class WeaponManger : MonoBehaviour
     private bool isCount;
 
     //各武器の攻撃力ステータス
-    private Dictionary<string, float> weaponAttackDic = new Dictionary<string, float>() 
+    private readonly Dictionary<string, float> weaponAttackDic = new() 
     {
 
         {"MainWeapon_1", 5 }, {"MainWeapon_2", 10 }, {"MainWeapon_3" , 15},
@@ -47,7 +47,7 @@ public class WeaponManger : MonoBehaviour
     };
 
     //各武器の体力ステータス
-    private Dictionary<string, float> weaponHealthDic = new Dictionary<string, float>()
+    private readonly Dictionary<string, float> weaponHealthDic = new()
     {
 
         {"MainWeapon_1", 10}, {"MainWeapon_2", 15}, {"MainWeapon_3" , 20},
@@ -59,7 +59,7 @@ public class WeaponManger : MonoBehaviour
     };
 
     //各武器のリキャストタイム
-    private Dictionary<string, int> weaponSkillCoolTimeDic = new Dictionary<string, int>()
+    private readonly Dictionary<string, int> weaponSkillCoolTimeDic = new()
     {
 
         {"MainWeapon_1", 0}, {"MainWeapon_2", 0}, {"MainWeapon_3" , 0},
@@ -86,17 +86,17 @@ public class WeaponManger : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
+        //武器名格納
         weaponName = name;
 
+        //武器ステータス取得
         attack = weaponAttackDic[weaponName];
         health = weaponHealthDic[weaponName];
 
         thisWeaponListNum = Player.instance.Weapon.IndexOf(gameObject);
-
-        
+      
 
         if (coolTimeText != null)
         {
@@ -109,10 +109,11 @@ public class WeaponManger : MonoBehaviour
 
         }
 
+        //特殊スキル武器入手時の関数
         SkillWeaponGet();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         //この武器アイコンがリストの何番目に配置されているのかを常に反映
@@ -128,6 +129,7 @@ public class WeaponManger : MonoBehaviour
             
         }
 
+        //スキル使用後のクールタイム表記更新処理
         if (usedSkill && GameManager.instance.playerTurn)
         {
 
@@ -142,6 +144,7 @@ public class WeaponManger : MonoBehaviour
 
         }
 
+        //リキャスト完了時処理
         if (coolTime <= 0 && usedSkill)
         {
             usedSkill = false;
@@ -149,6 +152,7 @@ public class WeaponManger : MonoBehaviour
             coolTimeText.SetActive(false);
         }
 
+        //ターン終了時処理
         if (GameManager.instance.enemyTurn || GameManager.instance.battleEnd)
         {
             isCount = false;
@@ -164,104 +168,104 @@ public class WeaponManger : MonoBehaviour
         {
             case "Sword":
                 //ソードスキル関数
-                Invoke("SwordSkill",delayTime);
+                Invoke(nameof(SwordSkill),delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Ax":
                 //斧スキル関数
-                Invoke("AxSkill", delayTime);
+                Invoke(nameof(AxSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Dagger":
                 //短剣スキル関数
-                Invoke("DaggerSkill", delayTime);
+                Invoke(nameof(DaggerSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Sickle":
                 //鎌スキル関数
-                Invoke("SickleSkill", delayTime);
+                Invoke(nameof(SickleSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Saber":
                 //刀スキル関数
-                Invoke("SaberSkill", delayTime);
+                Invoke(nameof(SaberSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "GreatSword":
                 //大剣スキル関数
-                Invoke("GreatSwordSkill", delayTime);
+                Invoke(nameof(GreatSwordSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Rapier":
                 //細剣スキル関数
-                Invoke("RapierSkill", delayTime);
+                Invoke(nameof(RapierSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Spear":
                 //槍スキル関数
-                Invoke("SpearSkill", delayTime);
+                Invoke(nameof(SpearSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Hammer":
                 //ハンマースキル関数
-                Invoke("HammerSkill", delayTime);
+                Invoke(nameof(HammerSkill), delayTime);
                 CoolTimeProcess();
                 return;
                 
             case "Club":
                 //こん棒スキル関数
-                Invoke("ClubSkill", delayTime);
+                Invoke(nameof(ClubSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Shield":
                 //木盾スキル関数
-                Invoke("ShieldSkill", delayTime);
+                Invoke(nameof(ShieldSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Tonfa":
                 //トンファースキル関数
-                Invoke("TonfaSkill", delayTime);
+                Invoke(nameof(TonfaSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Whip":
                 //ムチスキル関数
-                Invoke("WhipSkill", delayTime);
+                Invoke(nameof(WhipSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Chakram":
                 //チャクラムスキル関数
-                Invoke("ChakramSkill", delayTime);
+                Invoke(nameof(ChakramSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "Bow":
                 //弓スキル関数
-                Invoke("BowSkill", delayTime);
+                Invoke(nameof(BowSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
             case "BowGun":
                 //ボウガンスキル関数
-                Invoke("BowGunSkill", delayTime);
+                Invoke(nameof(BowGunSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
 
             case "Gun":
                 //銃スキル関数
-                Invoke("GunSkill", delayTime);
+                Invoke(nameof(GunSkill), delayTime);
                 CoolTimeProcess();
                 return;
 
@@ -654,7 +658,7 @@ public class WeaponManger : MonoBehaviour
         Player.instance.ShowBuffEffect();
     }
 
-    //特殊スキル武器入手時の関数
+    //特殊スキル武器入手時のフラグ管理関数
     private void SkillWeaponGet()
     {
         switch (weaponName)
@@ -689,6 +693,7 @@ public class WeaponManger : MonoBehaviour
         }
     }
 
+    //特殊スキル武器入れ替え時に削除された際のフラグ管理
     private void OnDestroy()
     {
         switch (weaponName)

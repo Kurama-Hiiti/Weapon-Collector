@@ -15,7 +15,7 @@ public class WeaponCard : MonoBehaviour
 
 
     //アイテムカード名と実際に加わるアイテムアイコンを対応させる
-    private Dictionary<string, string> iconNameDic = new Dictionary<string, string>()
+    private readonly Dictionary<string, string> iconNameDic = new()
     {
         {"Weapon_Ax", "Ax"},{"Weapon_Bow", "Bow"}, {"Weapon_BowGun", "BowGun"}, {"Weapon_Chakram", "Chakram"}, {"Weapon_Club", "Club"}, {"Weapon_Dagger", "Dagger"},
         {"Weapon_GreatSword", "GreatSword"}, {"Weapon_Gun", "Gun"}, {"Weapon_Hammer", "Hammer"}, {"Weapon_Rapier", "Rapier"}, {"Weapon_Saber", "Saber"}, {"Weapon_Shield", "Shield"},
@@ -29,7 +29,7 @@ public class WeaponCard : MonoBehaviour
     };
 
     //武器と消費アイテムの判別するための属性付け
-    private Dictionary<string, string> itemTypeDic = new Dictionary<string, string>()
+    private readonly Dictionary<string, string> itemTypeDic = new()
     {
         {"Weapon_Ax", "Weapon"},{"Weapon_Bow", "Weapon"}, {"Weapon_BowGun", "Weapon"}, {"Weapon_Chakram", "Weapon"}, {"Weapon_Club", "Weapon"}, {"Weapon_Dagger", "Weapon"},
         {"Weapon_GreatSword", "Weapon"}, {"Weapon_Gun", "Weapon"}, {"Weapon_Hammer", "Weapon"}, {"Weapon_Rapier", "Weapon"}, {"Weapon_Saber", "Weapon"}, {"Weapon_Shield", "Weapon"},
@@ -42,19 +42,15 @@ public class WeaponCard : MonoBehaviour
 
     };
 
-    // Start is called before the first frame update
     void Start()
     {
+        //名前取得
         itemName = name;
 
+        //アイコン名取得
         iconName = iconNameDic[itemName];
 
+        //アイテムタイプ取得
         itemType = itemTypeDic[itemName];
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

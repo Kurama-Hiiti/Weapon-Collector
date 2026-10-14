@@ -4,17 +4,11 @@ using UnityEngine;
 
 public class TextAnimation : MonoBehaviour
 {
+    //ダメージや回復時に表示されるテキストの表示時間設定処理
+
     //テキスト表示時間
     private float lifeTime = 0.5f;
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
         lifeTime -= Time.deltaTime;

@@ -70,7 +70,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         feedOutPanel.SetActive(false);
@@ -86,7 +85,7 @@ public class UIManager : MonoBehaviour
     {
         SoundManager.instance.PlaySE(SoundType.SystemButton);
         StartCoroutine(FeedOut());
-        Invoke("Retry", transitionTime);
+        Invoke(nameof(Retry), transitionTime);
     }
 
     private void Retry()
@@ -101,7 +100,7 @@ public class UIManager : MonoBehaviour
     {
         SoundManager.instance.PlaySE(SoundType.SystemButton);
         StartCoroutine(FeedOut());
-        Invoke("MainNomal", transitionTime);
+        Invoke(nameof(MainNomal), transitionTime);
     }
 
     private void MainNomal()
@@ -114,7 +113,7 @@ public class UIManager : MonoBehaviour
     {
         SoundManager.instance.PlaySE(SoundType.SystemButton);
         StartCoroutine(FeedOut());
-        Invoke("MainHard", transitionTime);
+        Invoke(nameof(MainHard), transitionTime);
     }
 
     private void MainHard()
@@ -127,7 +126,7 @@ public class UIManager : MonoBehaviour
     {
         SoundManager.instance.PlaySE(SoundType.SystemButton);
         StartCoroutine(FeedOut());
-        Invoke("MainVeryHard", transitionTime);
+        Invoke(nameof(MainVeryHard), transitionTime);
     }
 
     private void MainVeryHard()
@@ -143,7 +142,7 @@ public class UIManager : MonoBehaviour
         GameManager.instance.GetMoney();
 
         StartCoroutine(FeedOut());
-        Invoke("Title", transitionTime);
+        Invoke(nameof(Title), transitionTime);
     }
 
     private void Title()
@@ -154,7 +153,7 @@ public class UIManager : MonoBehaviour
     public void NextWave()
     {
         StartCoroutine(FeedOut());
-        Invoke("NextWaveStart", transitionTime + 2.0f);
+        Invoke(nameof(NextWaveStart), transitionTime + 2.0f);
     }
 
     private void NextWaveStart()
@@ -169,8 +168,11 @@ public class UIManager : MonoBehaviour
     private IEnumerator FeedOut()
     {
         feedOutPanel.SetActive(true);
+
+        //Œo‰ßŽžŠÔ
         elapsedTime = 0;
 
+        //Œo‰ßŽžŠÔ‚É‰ž‚¶‚Ä‰æ‘œ‚ðˆÃ“]‚³‚¹‚é
         while (elapsedTime < transitionTime)
         {
             elapsedTime += Time.deltaTime;

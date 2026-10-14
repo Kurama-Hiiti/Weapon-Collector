@@ -12,66 +12,68 @@ public class ItemManager : MonoBehaviour
     private string itemName;
 
     //アイテム使用ボタンを押してから発動までのすき間時間
-    private float delayTime = 0.2f;
+    private readonly float delayTime = 0.2f;
 
-    // Start is called before the first frame update
     void Start()
     {
+        //アイテムの名前を格納
         itemName = name;
 
+        //所持しているアイテムのリスト番号取得(リストの何番目のアイテムか判定する)
         thisItemListNum = Player.instance.Item.IndexOf(gameObject);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //アイテムが使用された時にリストの順番が変更するので都度番号を取得する
         thisItemListNum = Player.instance.Item.IndexOf(gameObject);
     }
 
+    //アイテム使用関数
     public void UseItem()
     {
         switch (itemName)
         {
             case "MiniPotion":
                 //ミニポーション効果
-                Invoke("MiniPotionEffect", delayTime);
+                Invoke(nameof(MiniPotionEffect), delayTime);
 
                 return;
             case "MiddlePotion":
                 //ミドルポーション効果
-                Invoke("MiddlePotionEffect", delayTime);
+                Invoke(nameof(MiddlePotionEffect), delayTime);
                 return;
             case "HighPotion":
                 //ハイポーション効果
-                Invoke("HighPotionEffect", delayTime);
+                Invoke(nameof(HighPotionEffect), delayTime);
                 return;
             case "ExtraPotion":
                 //エクストラポーション効果
-                Invoke("ExtraPotionEffect", delayTime);
+                Invoke(nameof(ExtraPotionEffect), delayTime);
                 return;
             case "AttackPotion":
                 //力のポーション効果
-                Invoke("AttackPotionEffect", delayTime);
+                Invoke(nameof(AttackPotionEffect), delayTime);
                 return;
             case "DefensePotion":
                 //防御のポーション効果
-                Invoke("DefensePotionEffect", delayTime);
+                Invoke(nameof(DefensePotionEffect), delayTime);
                 return;
             case "AmuletAttackDown":
                 //呪いの護符（攻）効果
-                Invoke("AmuletAttackDownEffect", delayTime);
+                Invoke(nameof(AmuletAttackDownEffect), delayTime);
                 return;
             case "AmuletDefenseDown":
                 //呪いの護符（防）効果
-                Invoke("AmuletDefenseDownEffect", delayTime);
+                Invoke(nameof(AmuletDefenseDownEffect), delayTime);
                 return;
             case "Mantle":
                 //マント効果
-                Invoke("MantleEffect", delayTime);
+                Invoke(nameof(MantleEffect), delayTime);
                 return;
             case "HolyAmulet":
                 //マント効果
-                Invoke("HolyAmuletEffect", delayTime);
+                Invoke(nameof(HolyAmuletEffect), delayTime);
                 return;
 
         }

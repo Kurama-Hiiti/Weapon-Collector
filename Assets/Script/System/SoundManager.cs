@@ -49,7 +49,7 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    //音を鳴らす関数
+    //SEを鳴らす関数
     public void PlaySE(SoundType type)
     {
         int index = (int)type;
@@ -61,10 +61,11 @@ public class SoundManager : MonoBehaviour
 
     }
 
+    //クリアBGM再生処理
     public void GameClearBGM()
     {
         mainBGM.Stop();
-        Invoke("GameClearBGMPlay", 0.5f);
+        Invoke(nameof(GameClearBGMPlay), 0.5f);
     }
 
     private void GameClearBGMPlay()
@@ -73,10 +74,11 @@ public class SoundManager : MonoBehaviour
     }
 
 
+    //ゲームオーバーBGM再生処理
     public void GameOverBGM()
     {
         mainBGM.Stop();
-        Invoke("GameOverBGMPlay", 0.5f);
+        Invoke(nameof(GameOverBGMPlay), 0.5f);
     }
 
 

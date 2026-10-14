@@ -36,7 +36,7 @@ public class UpGradeManager : MonoBehaviour
     private int weaponUpGradePhaseNum;
 
     //武器のアップグレード上限
-    private int maxWeaponUpGradePhaseNum = 2;
+    private readonly int maxWeaponUpGradePhaseNum = 2;
 
 
 
@@ -60,7 +60,7 @@ public class UpGradeManager : MonoBehaviour
     private int attackUpGradePhaseNum;
 
     //攻撃力のアップグレード上限
-    private int maxAttackUpGradePhaseNum = 5;
+    private readonly int maxAttackUpGradePhaseNum = 5;
 
 
     //体力アップグレード関係
@@ -84,7 +84,7 @@ public class UpGradeManager : MonoBehaviour
     private int healthUpGradePhaseNum;
 
     //体力のアップグレード上限
-    private int maxHealthUpGradePhaseNum = 3;
+    private readonly int maxHealthUpGradePhaseNum = 3;
 
 
     //回避率アップグレード関係
@@ -108,7 +108,7 @@ public class UpGradeManager : MonoBehaviour
     private int evasionRateUpGradePhaseNum;
 
     //回避率のアップグレード上限
-    private int maxEvasionRateUpGradePhaseNum = 5;
+    private readonly int maxEvasionRateUpGradePhaseNum = 5;
 
 
     //クリティカル率アップグレード関係
@@ -132,7 +132,7 @@ public class UpGradeManager : MonoBehaviour
     private int criticalRateUpGradePhaseNum;
 
     //クリティカル率のアップグレード上限
-    private int maxCriticalRateUpGradePhaseNum = 5;
+    private readonly int maxCriticalRateUpGradePhaseNum = 5;
 
 
     //初期闘気アップグレード関係
@@ -156,17 +156,17 @@ public class UpGradeManager : MonoBehaviour
     private int energyUpGradePhaseNum;
 
     //闘気のアップグレード上限
-    private int maxEnergyUpGradePhaseNum = 5;
+    private readonly int maxEnergyUpGradePhaseNum = 5;
 
 
 
-    // Start is called before the first frame update
+
     void Start()
     {
         UpGradeMoneyMass();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         //所持金表示
@@ -298,7 +298,7 @@ public class UpGradeManager : MonoBehaviour
 
     }
 
-    //武器アップグレード関数
+    //武器アップグレード関数 （ボタン）
     public void WeaponUpGrade()
     {
         //SE
@@ -342,6 +342,7 @@ public class UpGradeManager : MonoBehaviour
         {
             attackMoney.text = attackUpGradePhaseOne.ToString();
 
+            //現在の所持金が必要費用に達していない場合
             if (GameManager.instance.playerAllMoney < attackUpGradePhaseOne)
             {
                 attackUpGradeButton.GetComponent<Button>().interactable = false;
@@ -415,7 +416,7 @@ public class UpGradeManager : MonoBehaviour
         }
     }
 
-    //攻撃力アップグレード関数
+    //攻撃力アップグレード関数　（ボタン）
     public void AttackUpGrade()
     {
         //SE
@@ -493,6 +494,7 @@ public class UpGradeManager : MonoBehaviour
         {
             healthMoneyText.text = healthUpGradePhaseOne.ToString();
 
+            //現在の所持金が必要費用に達していない場合
             if (GameManager.instance.playerAllMoney < healthUpGradePhaseOne)
             {
                 healthUpGradeButton.GetComponent<Button>().interactable = false;
@@ -538,7 +540,7 @@ public class UpGradeManager : MonoBehaviour
 
     }
 
-    //体力のアップグレード
+    //体力のアップグレード　（ボタン）
     public void HealthUpGrade()
     {
         //SE
@@ -595,6 +597,7 @@ public class UpGradeManager : MonoBehaviour
         {
             evasionRateMoneyText.text = evasionRateUpGradePhaseOne.ToString();
 
+            //現在の所持金が必要費用に達していない場合
             if (GameManager.instance.playerAllMoney < evasionRateUpGradePhaseOne)
             {
                 evasionRateUpGradeButton.GetComponent<Button>().interactable = false;
@@ -668,7 +671,7 @@ public class UpGradeManager : MonoBehaviour
         }
     }
 
-    //回避率のアップグレード
+    //回避率のアップグレード　（ボタン）
     public void EvasionRateUpGrade()
     {
         //SE
@@ -745,6 +748,7 @@ public class UpGradeManager : MonoBehaviour
         {
             criticalRateMoneyText.text = criticalRateUpGradePhaseOne.ToString();
 
+            //現在の所持金が必要費用に達していない場合
             if (GameManager.instance.playerAllMoney < criticalRateUpGradePhaseOne)
             {
                 criticalRateUpGradeButton.GetComponent<Button>().interactable = false;
@@ -819,7 +823,7 @@ public class UpGradeManager : MonoBehaviour
     }
 
 
-    //クリティカル率のアップグレード
+    //クリティカル率のアップグレード　（ボタン）
     public void CriticalRateUpGrade()
     {
         //SE
@@ -838,8 +842,6 @@ public class UpGradeManager : MonoBehaviour
         }
         else if (criticalRateUpGradePhaseNum == 1)
         {
-            //SE
-            //SoundManager.instance.PlaySE();
 
             PlayerPrefs.SetInt("CriticalRateUpGradePhase", 2);
 
@@ -898,6 +900,7 @@ public class UpGradeManager : MonoBehaviour
         {
             energyMoneyText.text = energyUpGradePhaseOne.ToString();
 
+            //現在の所持金が必要費用に達していない場合
             if (GameManager.instance.playerAllMoney < energyUpGradePhaseOne)
             {
                 energyUpGradeButton.GetComponent<Button>().interactable = false;
@@ -972,7 +975,7 @@ public class UpGradeManager : MonoBehaviour
     }
 
 
-    //闘気アップグレード
+    //闘気アップグレード　（ボタン）
     public void EnergyUpGrade()
     {
         //SE
