@@ -29,7 +29,7 @@ public class AspectKeeper : MonoBehaviour
         else
         {
             viewportRect.height = 1 / magRate; //使用する縦幅を変更
-            viewportRect.y = 0.5f - viewportRect.height * 0.5f;//中央余生
+            viewportRect.y = 0.5f - viewportRect.height * 0.5f;//中央寄せ
         }
 
         targetCamera.rect = viewportRect; //カメラのViewportに適用
